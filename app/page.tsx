@@ -1155,8 +1155,7 @@ export default function Home() {
           {/* Copyright */}
           <div className="mt-12 pt-6 border-t border-white/20 text-center">
             <p className="text-sm">
-              © 2025 Pet-Friendly City Initiative by CollegeTips.in. All rights
-              reserved.
+              © 2025 Harshith Doddipalli. All rights reserved.
             </p>
           </div>
         </div>

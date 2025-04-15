@@ -19,8 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
-        {children}
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </head>
+      <body className={`${inter.className} w-full overflow-x-hidden`}>
+        <div className="w-full max-w-[100vw] overflow-x-hidden">
+          {children}
+        </div>
         <Script src="https://www.instagram.com/embed.js" strategy="afterInteractive" />
       </body>
     </html>

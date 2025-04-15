@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Add Instagram embed type definition
 declare global {
@@ -14,6 +14,7 @@ declare global {
     };
   }
 }
+
 import {
   ArrowRight,
   Heart,
@@ -35,36 +36,47 @@ export default function Home() {
   const objectivesRef = useRef<HTMLElement>(null);
   const initiativesRef = useRef<HTMLElement>(null);
   const impactRef = useRef<HTMLElement>(null);
-  
+
   // State for chat box
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', message: 'Hello! I\'m PawBuddy, your friendly guide to the Pet-Friendly City campaign. How can I help you today?' },
+    {
+      sender: "bot",
+      message:
+        "Hello! I'm PawBuddy, your friendly guide to the Pet-Friendly City campaign. How can I help you today?",
+    },
   ]);
-  const [userMessage, setUserMessage] = useState('');
-  
+  const [userMessage, setUserMessage] = useState("");
+
   // Function to handle sending messages in the chat
   const handleSendMessage = () => {
-    if (userMessage.trim() === '') return;
-    
+    if (userMessage.trim() === "") return;
+
     // Add user message to chat
-    setChatMessages([...chatMessages, { sender: 'user', message: userMessage }]);
-    
+    setChatMessages([
+      ...chatMessages,
+      { sender: "user", message: userMessage },
+    ]);
+
     // Simulate bot response
     setTimeout(() => {
-      setChatMessages(prev => [...prev, { 
-        sender: 'bot', 
-        message: 'Thanks for your message! Our team is working on making cities more pet-friendly. Would you like to learn more about our initiatives or how you can get involved?'
-      }]);
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          message:
+            "Thanks for your message! Our team is working on making cities more pet-friendly. Would you like to learn more about our initiatives or how you can get involved?",
+        },
+      ]);
     }, 1000);
-    
-    setUserMessage('');
+
+    setUserMessage("");
   };
-  
+
   // Handle pressing Enter to send message
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSendMessage();
     }
   };
@@ -122,60 +134,113 @@ export default function Home() {
     <main className="min-h-screen bg-parchment">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-hunter-green">
-        <div className="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+        <div className="w-full px-4 py-4 flex justify-between items-center">
           <Link
             href="/"
             className="text-xl font-bold tracking-tighter text-hunter-green"
           >
-            PET-FRIENDLY CITY
+            🐶 PET-FRIENDLY CITY
           </Link>
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-hunter-green"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <div className={`hidden md:flex space-x-4 md:space-x-8 ${isMenuOpen ? 'absolute top-full left-0 w-full bg-white py-4 px-8 shadow-lg' : ''}`}>
+          <div className="hidden md:flex space-x-4 md:space-x-8">
             <Link
               href="#about"
-              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet hover:scale-105 transition-all"
             >
               About
             </Link>
             <Link
               href="#objectives"
-              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet hover:scale-105 transition-all"
             >
               Objectives
             </Link>
             <Link
               href="#initiatives"
-              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet hover:scale-105 transition-all"
             >
               Initiatives
             </Link>
             <Link
               href="#impact"
-              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet hover:scale-105 transition-all"
             >
               Impact
             </Link>
-
             <Link
               href="#contact"
-              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet hover:scale-105 transition-all"
             >
               Join Us
             </Link>
           </div>
+          <button
+            className="md:hidden p-2 text-hunter-green"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+          <motion.div
+            initial={false}
+            animate={isMenuOpen ? "open" : "closed"}
+            variants={{
+              open: { opacity: 1, y: 0, display: "flex" },
+              closed: {
+                opacity: 0,
+                y: -20,
+                transitionEnd: { display: "none" },
+              },
+            }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden absolute top-full left-0 right-0 w-full bg-white py-4 px-2 shadow-lg flex flex-col space-y-2"
+          >
+            <Link
+              href="#about"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors pl-4"
+            >
+              About
+            </Link>
+            <Link
+              href="#objectives"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors pl-4"
+            >
+              Objectives
+            </Link>
+            <Link
+              href="#initiatives"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors pl-4"
+            >
+              Initiatives
+            </Link>
+            <Link
+              href="#impact"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors pl-4"
+            >
+              Impact
+            </Link>
+            <Link
+              href="#contact"
+              className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors pl-4"
+            >
+              Join Us
+            </Link>
+          </motion.div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 md:px-8 container mx-auto">
+      <section className="pt-32 px-4 pb-6 md:pb-12 container mx-auto">
         <div className="grid grid-cols-12 gap-4 px-4 md:px-0">
           <div className="col-span-12 md:col-span-7 mb-8 md:mb-0">
             <motion.h1
@@ -216,19 +281,19 @@ export default function Home() {
             >
               <Link
                 href="#contact"
-                className="inline-flex items-center px-4 py-2 md:px-8 md:py-3 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-hunter-green transition-colors"
+                className="inline-flex rounded-sm items-center px-4 py-2 md:px-8 md:py-3 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-hunter-green hover:scale-105 transition-all"
               >
                 Join The Movement <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href="#volunteer-form"
-                className="inline-flex items-center px-8 py-3 bg-hunter-green text-white text-sm uppercase tracking-widest hover:bg-bittersweet transition-colors"
+                className="inline-flex rounded-sm items-center px-4 py-2 md:px-8 md:py-3 bg-hunter-green text-white text-sm uppercase tracking-widest hover:bg-bittersweet hover:scale-105 transition-all"
               >
                 Volunteer Now <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href="#impact-stories"
-                className="inline-flex items-center px-8 py-3 border-2 border-hunter-green text-hunter-green text-sm uppercase tracking-widest hover:bg-hunter-green hover:text-white transition-colors"
+                className="inline-flex rounded-sm items-center px-4 py-2 md:px-8 md:py-3 border-2 border-hunter-green text-hunter-green text-sm uppercase tracking-widest hover:bg-hunter-green hover:text-white hover:scale-105 transition-all"
               >
                 Learn More <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -242,37 +307,36 @@ export default function Home() {
           >
             <div className="relative w-full overflow-hidden">
               <div className="instagram-embed-container">
-                <blockquote 
-                  className="instagram-media" 
-                  data-instgrm-permalink="https://www.instagram.com/reel/DIA-mB2SgZ8/?utm_source=ig_embed&amp;utm_campaign=loading" 
+                <blockquote
+                  className="instagram-media"
+                  data-instgrm-permalink="https://www.instagram.com/reel/DIA-mB2SgZ8/?utm_source=ig_embed&amp;utm_campaign=loading"
                   data-instgrm-version="14"
                   style={{
-                    background: '#FFF',
+                    background: "#FFF",
                     border: 0,
-                    borderRadius: '3px',
-                    boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-                    margin: '1px',
-                    maxWidth: '540px',
-                    minWidth: '326px',
+                    borderRadius: "3px",
+                    boxShadow:
+                      "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+                    margin: "1px",
+                    maxWidth: "540px",
+                    minWidth: "326px",
                     padding: 0,
-                    width: 'calc(100% - 2px)'
+                    width: "calc(100% - 2px)",
                   }}
                 >
-                  <div style={{padding: '16px'}}>
-                    <a 
-                      href="https://www.instagram.com/reel/DIA-mB2SgZ8/?utm_source=ig_embed&amp;utm_campaign=loading" 
+                  <div style={{ padding: "16px" }}>
+                    <a
+                      href="https://www.instagram.com/reel/DIA-mB2SgZ8/?utm_source=ig_embed&amp;utm_campaign=loading"
                       style={{
-                        background: '#FFFFFF',
+                        background: "#FFFFFF",
                         lineHeight: 0,
-                        padding: '0 0',
-                        textAlign: 'center',
-                        textDecoration: 'none',
-                        width: '100%'
-                      }} 
+                        padding: "0 0",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        width: "100%",
+                      }}
                       target="_blank"
-                    >
-                      {/* Instagram embed content */}
-                    </a>
+                    ></a>
                   </div>
                 </blockquote>
               </div>
@@ -288,7 +352,9 @@ export default function Home() {
         className="py-20 px-4 md:px-8 bg-hunter-green text-white opacity-0 transition-opacity duration-1000"
       >
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12">ABOUT</h2>
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12">
+            ABOUT
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -310,15 +376,12 @@ export default function Home() {
               </p>
             </div>
             <div className="relative">
-              <div className="aspect-[4/3] bg-asparagus relative overflow-hidden">
+              <div className="aspect-[16/9] rounded-xl relative overflow-hidden animate-levitate ">
                 <img
-                  src="/placeholder.svg?height=600&width=800"
+                  src="/images/volunteers.png"
                   alt="Community volunteers helping stray animals"
-                  className="w-full h-full object-cover opacity-80"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-3/4 h-3/4 border-2 border-white"></div>
-                </div>
               </div>
             </div>
           </div>
@@ -332,14 +395,14 @@ export default function Home() {
         className="py-20 px-4 md:px-8 bg-parchment opacity-0 transition-opacity duration-1000"
       >
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
             OBJECTIVES
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 px-4 md:px-0">
             {/* Objective 1 */}
             <div className="group">
-              <div className="aspect-square bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
+              <div className="aspect-square rounded-xl bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
                 <Heart className="h-16 w-16 text-hunter-green group-hover:text-white transition-colors duration-300" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-hunter-green">
@@ -353,7 +416,7 @@ export default function Home() {
 
             {/* Objective 2 */}
             <div className="group">
-              <div className="aspect-square bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
+              <div className="aspect-square rounded-xl bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
                 <Shield className="h-16 w-16 text-hunter-green group-hover:text-white transition-colors duration-300" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-hunter-green">
@@ -367,7 +430,7 @@ export default function Home() {
 
             {/* Objective 3 */}
             <div className="group">
-              <div className="aspect-square bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
+              <div className="aspect-square rounded-xl bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
                 <Utensils className="h-16 w-16 text-hunter-green group-hover:text-white transition-colors duration-300" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-hunter-green">
@@ -381,7 +444,7 @@ export default function Home() {
 
             {/* Objective 4 */}
             <div className="group">
-              <div className="aspect-square bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
+              <div className="aspect-square rounded-xl bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
                 <Park className="h-16 w-16 text-hunter-green group-hover:text-white transition-colors duration-300" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-hunter-green">
@@ -402,7 +465,7 @@ export default function Home() {
         className="py-20 px-4 md:px-8 bg-asparagus text-white opacity-0 transition-opacity duration-1000"
       >
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12">
             INITIATIVES
           </h2>
 
@@ -411,7 +474,7 @@ export default function Home() {
               {/* Initiative 1 */}
               <div className="flex">
                 <div className="mr-6">
-                  <div className="w-16 h-16 bg-parchment flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-md bg-parchment flex items-center justify-center">
                     <BookOpen className="h-8 w-8 text-bittersweet" />
                   </div>
                 </div>
@@ -427,7 +490,7 @@ export default function Home() {
               {/* Initiative 2 */}
               <div className="flex">
                 <div className="mr-6">
-                  <div className="w-16 h-16 bg-parchment flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-md bg-parchment flex items-center justify-center">
                     <Building className="h-8 w-8 text-bittersweet" />
                   </div>
                 </div>
@@ -447,7 +510,7 @@ export default function Home() {
               {/* Initiative 3 */}
               <div className="flex">
                 <div className="mr-6">
-                  <div className="w-16 h-16 bg-parchment flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-md bg-parchment flex items-center justify-center">
                     <Users className="h-8 w-8 text-bittersweet" />
                   </div>
                 </div>
@@ -463,7 +526,7 @@ export default function Home() {
               {/* Initiative 4 */}
               <div className="flex">
                 <div className="mr-6">
-                  <div className="w-16 h-16 bg-parchment flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-md bg-parchment flex items-center justify-center">
                     <Package className="h-8 w-8 text-bittersweet" />
                   </div>
                 </div>
@@ -489,7 +552,7 @@ export default function Home() {
         className="py-20 px-4 md:px-8 bg-parchment opacity-0 transition-opacity duration-1000"
       >
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
             IMPACT
           </h2>
 
@@ -539,34 +602,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Leader's Remarks Section */}
       <section className="py-20 px-4 md:px-8 bg-hunter-green text-white">
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12">
-            TESTIMONIALS
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12">
+            LEADER'S REMARK!
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Testimonial 1 */}
+            {/* Leader's Remark 1 */}
             <div className="border-l-4 border-bittersweet pl-6">
               <p className="text-xl italic mb-6">
-                "The Pet-Friendly City initiative has transformed how our
-                community views and treats animals. The resources they've
-                provided have made a tangible difference in the lives of strays
-                in our neighborhood."
+                "I have been told that Indian breed dogs are very good and
+                competent. Among the Indian breeds, Mudhol hound and Himachali
+                hound are high pedigree dogs. Rajapalayam, Kanni, Chippiparai
+                and Combai are also very good Indian breeds. These dogs have
+                also been inducted by Indian Security agencies."
               </p>
-              <p className="font-bold">Priya Sharma, Community Volunteer</p>
+              <div className="flex items-center gap-4">
+                <img
+                  src="/images/narendra-modi.png"
+                  alt="Shree Narendra Modi"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-bittersweet"
+                />
+                <p className="font-bold">
+                  Shree Narendra Modi
+                  <br />
+                  <span className="font-light text-sm">
+                    Prime Minister of India
+                  </span>
+                </p>
+              </div>
             </div>
 
-            {/* Testimonial 2 */}
+            {/* Leader's Remark 2 */}
             <div className="border-l-4 border-bittersweet pl-6">
               <p className="text-xl italic mb-6">
-                "As a veterinarian, I've seen firsthand how the PFC initiative
-                has improved animal welfare standards across the city. Their
-                vaccination drives have reached animals that would otherwise
-                never receive care."
+                "Lord Krishna was called 'Gopal' out of love, and he found joy
+                in being known as Gopal throughout his life due to his deep
+                affection for cows. He adorned his crown with a peacock feather
+                and always valued cows. By linking cow rearing to livelihood, he
+                emphasized both an economic resource and a connection to the
+                elixir of life."
               </p>
-              <p className="font-bold">Dr. Rajesh Kumar, Veterinarian</p>
+              <div className="flex items-center gap-4">
+                <img
+                  src="/images/mohan-yadav.png"
+                  alt="Dr. Mohan Yadav"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-bittersweet"
+                />
+                <p className="font-bold">
+                  Dr. Mohan Yadav
+                  <br />
+                  <span className="font-light text-sm">
+                    Chief Minister of MP
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -575,51 +667,43 @@ export default function Home() {
       {/* Gallery Section */}
       <section className="py-20 px-4 md:px-8 bg-parchment">
         <div className="container mx-auto">
-          <h2 className="text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-12 text-hunter-green">
             GALLERY
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="aspect-square bg-yellow-green overflow-hidden"
+              className="aspect-square rounded-xl bg-yellow-green animate-levitate1 overflow-hidden"
             >
               <img
-                src="/placeholder.svg?height=400&width=400"
+                src="https://cataas.com/cat"
                 alt="Dog at park"
                 className="w-full h-full object-cover"
               />
             </motion.div>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="aspect-square bg-yellow-green overflow-hidden"
+              className="aspect-square rounded-xl bg-yellow-green animate-levitate2 overflow-hidden"
             >
               <img
-                src="/placeholder.svg?height=400&width=400"
+                src="https://cataas.com/cat?unique=2"
                 alt="Volunteers feeding strays"
                 className="w-full h-full object-cover"
               />
             </motion.div>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="aspect-square bg-yellow-green overflow-hidden"
+              className="aspect-square rounded-xl bg-yellow-green animate-levitate3 overflow-hidden"
             >
               <img
-                src="/placeholder.svg?height=400&width=400"
+                src="https://cataas.com/cat?unique=3"
                 alt="Vaccination camp"
                 className="w-full h-full object-cover"
               />
             </motion.div>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="aspect-square bg-yellow-green overflow-hidden"
+              className="aspect-square rounded-xl bg-yellow-green animate-levitate4 overflow-hidden"
             >
               <img
-                src="/placeholder.svg?height=400&width=400"
+                src="https://cataas.com/cat?unique=4"
                 alt="Pet-friendly park"
                 className="w-full h-full object-cover"
               />
@@ -629,21 +713,19 @@ export default function Home() {
       </section>
 
       {/* Impact Stories Section */}
-      <section 
-        id="impact-stories" 
-        className="py-20 px-4 md:px-8 bg-white"
-      >
+      <section id="impact-stories" className="py-20 px-4 md:px-8 bg-white">
         <div className="container mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-8 text-hunter-green">
             Impact Stories
           </h2>
           <p className="text-xl mb-12 max-w-3xl">
-            Real stories of how our initiative is making a difference in the lives of animals and communities across India.
+            Real stories of how our initiative is making a difference in the
+            lives of animals and communities across India.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Story 1 */}
-            <motion.div 
+            <motion.div
               whileHover={{ y: -10 }}
               className="bg-parchment p-6 shadow-md rounded-lg"
             >
@@ -654,15 +736,20 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2 text-hunter-green">Bangalore's First Pet Park</h3>
+              <h3 className="text-xl font-bold mb-2 text-hunter-green">
+                Bangalore's First Pet Park
+              </h3>
               <p className="text-hunter-green/80 mb-4">
-                How community activism led to the creation of a dedicated space for pets to play and socialize safely.
+                How community activism led to the creation of a dedicated space
+                for pets to play and socialize safely.
               </p>
-              <p className="text-sm text-bittersweet font-medium">June 15, 2023</p>
+              <p className="text-sm text-bittersweet font-medium">
+                June 15, 2023
+              </p>
             </motion.div>
-            
+
             {/* Story 2 */}
-            <motion.div 
+            <motion.div
               whileHover={{ y: -10 }}
               className="bg-parchment p-6 shadow-md rounded-lg"
             >
@@ -673,27 +760,35 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-xl font-bold mb-2 text-hunter-green">Street Animal Safety Initiative</h3>
+              <h3 className="text-xl font-bold mb-2 text-hunter-green">
+                Street Animal Safety Initiative
+              </h3>
               <p className="text-hunter-green/80 mb-4">
-                How traffic awareness campaigns reduced animal accidents by 40% in Mumbai's busy streets.
+                How traffic awareness campaigns reduced animal accidents by 40%
+                in Mumbai's busy streets.
               </p>
-              <p className="text-sm text-bittersweet font-medium">August 3, 2023</p>
+              <p className="text-sm text-bittersweet font-medium">
+                August 3, 2023
+              </p>
             </motion.div>
-            
+
             {/* Story 3 - Placeholder for future updates */}
-            <motion.div 
+            <motion.div
               whileHover={{ y: -10 }}
               className="bg-parchment p-6 shadow-md rounded-lg border-2 border-dashed border-yellow-green/50"
             >
               <div className="aspect-video bg-yellow-green/30 mb-6 overflow-hidden rounded-lg flex items-center justify-center">
                 <p className="text-hunter-green font-medium">Coming Soon</p>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-hunter-green">Your Story Here</h3>
+              <h3 className="text-xl font-bold mb-2 text-hunter-green">
+                Your Story Here
+              </h3>
               <p className="text-hunter-green/80 mb-4">
-                Have an inspiring pet-friendly success story? Share it with us and it might be featured here!
+                Have an inspiring pet-friendly success story? Share it with us
+                and it might be featured here!
               </p>
-              <Link 
-                href="#volunteer-form" 
+              <Link
+                href="#volunteer-form"
                 className="text-sm text-bittersweet font-medium hover:underline"
               >
                 Submit Your Story
@@ -704,10 +799,7 @@ export default function Home() {
       </section>
 
       {/* Volunteer Form Section */}
-      <section 
-        id="volunteer-form" 
-        className="py-20 px-4 md:px-8 bg-parchment"
-      >
+      <section id="volunteer-form" className="py-20 px-4 md:px-8 bg-parchment">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -715,10 +807,14 @@ export default function Home() {
                 Join Our Movement
               </h2>
               <p className="text-xl mb-8 text-hunter-green/80">
-                Become a volunteer and help us create pet-friendly spaces in your city. Fill out the form to get started on your journey with us.
+                Become a volunteer and help us create pet-friendly spaces in
+                your city. Fill out the form to get started on your journey with
+                us.
               </p>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-4 text-hunter-green">What Volunteers Do</h3>
+                <h3 className="text-xl font-bold mb-4 text-hunter-green">
+                  What Volunteers Do
+                </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <div className="mr-3 mt-1 text-bittersweet">•</div>
@@ -743,9 +839,11 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-            
+
             <div className="bg-white p-8 rounded-lg shadow-md">
-              <h3 className="text-2xl font-bold mb-6 text-hunter-green">Volunteer Registration</h3>
+              <h3 className="text-2xl font-bold mb-6 text-hunter-green">
+                Volunteer Registration
+              </h3>
               <form className="space-y-6">
                 <div>
                   <label
@@ -762,7 +860,7 @@ export default function Home() {
                     placeholder="Your full name"
                   />
                 </div>
-                
+
                 <div>
                   <label
                     htmlFor="email"
@@ -778,7 +876,7 @@ export default function Home() {
                     placeholder="Your email address"
                   />
                 </div>
-                
+
                 <div>
                   <label
                     htmlFor="phone"
@@ -793,7 +891,7 @@ export default function Home() {
                     placeholder="Your phone number"
                   />
                 </div>
-                
+
                 <div>
                   <label
                     htmlFor="city"
@@ -809,7 +907,7 @@ export default function Home() {
                     placeholder="Your city"
                   />
                 </div>
-                
+
                 <div>
                   <label
                     htmlFor="role-preference"
@@ -823,15 +921,19 @@ export default function Home() {
                     className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-bittersweet focus:border-transparent"
                   >
                     <option value="">Select your preferred role</option>
-                    <option value="community-outreach">Community Outreach</option>
-                    <option value="event-organization">Event Organization</option>
+                    <option value="community-outreach">
+                      Community Outreach
+                    </option>
+                    <option value="event-organization">
+                      Event Organization
+                    </option>
                     <option value="animal-care">Animal Care</option>
                     <option value="advocacy">Advocacy & Policy</option>
                     <option value="content-creation">Content Creation</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
-                
+
                 <div>
                   <label
                     htmlFor="experience"
@@ -846,7 +948,7 @@ export default function Home() {
                     placeholder="Tell us about any previous volunteer experience (if any)"
                   ></textarea>
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full px-8 py-3 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-hunter-green transition-colors rounded-md"
@@ -865,116 +967,182 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Office Locations */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">Our Hub</h3>
-              
+              <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">
+                Our Hub
+              </h3>
+
               <div className="space-y-4">
                 <div>
-                  <p className="font-semibold text-bittersweet">Bhopal Office:</p>
-                  <p className="text-sm">Third Floor, Above Bread &amp; Better, Near Shiyoy Complex, Gulmohar, Bhopal, Madhya Pradesh 462039</p>
+                  <p className="font-semibold text-bittersweet">
+                    Bhopal Office:
+                  </p>
+                  <p className="text-sm">
+                    Third Floor, Above Bread &amp; Better, Near Shiyoy Complex,
+                    Gulmohar, Bhopal, Madhya Pradesh 462039
+                  </p>
                 </div>
-                
+
                 <div>
-                  <p className="font-semibold text-bittersweet">Mumbai Office:</p>
-                  <p className="text-sm">74 Technopark, MIDC Gate no 2, Seepz, Andheri East, Mumbai, Maharashtra 400069</p>
+                  <p className="font-semibold text-bittersweet">
+                    Mumbai Office:
+                  </p>
+                  <p className="text-sm">
+                    74 Technopark, MIDC Gate no 2, Seepz, Andheri East, Mumbai,
+                    Maharashtra 400069
+                  </p>
                 </div>
-                
+
                 <div>
-                  <p className="font-semibold text-bittersweet">Delhi Office:</p>
-                  <p className="text-sm">1112, Surya kiran building, Connaught Place, New Delhi, 110001</p>
+                  <p className="font-semibold text-bittersweet">
+                    Delhi Office:
+                  </p>
+                  <p className="text-sm">
+                    1112, Surya kiran building, Connaught Place, New Delhi,
+                    110001
+                  </p>
                 </div>
-                
+
                 <div>
                   <p className="font-semibold text-bittersweet">Pune Office:</p>
-                  <p className="text-sm">First Floor, Creaticity Mall, Opposite Golf Course, Shastrinagar, Yerawada, Pune 411006</p>
+                  <p className="text-sm">
+                    First Floor, Creaticity Mall, Opposite Golf Course,
+                    Shastrinagar, Yerawada, Pune 411006
+                  </p>
                 </div>
-                
+
                 <div>
-                  <p className="font-semibold text-bittersweet">Indore Office:</p>
-                  <p className="text-sm">The One, RNT Marg, Indore, Madhya Pradesh 452001</p>
+                  <p className="font-semibold text-bittersweet">
+                    Indore Office:
+                  </p>
+                  <p className="text-sm">
+                    The One, RNT Marg, Indore, Madhya Pradesh 452001
+                  </p>
                 </div>
-                
+
                 <div>
-                  <p className="font-semibold text-bittersweet">Upcoming Cities:</p>
-                  <p className="text-sm">RAIPUR, JAIPUR, GWALIOR, AHEMEDABAD &amp; GOA<br/>HUNGARY (International Hub)</p>
+                  <p className="font-semibold text-bittersweet">
+                    Upcoming Cities:
+                  </p>
+                  <p className="text-sm">
+                    RAIPUR, JAIPUR, GWALIOR, AHEMEDABAD &amp; GOA
+                    <br />
+                    HUNGARY (International Hub)
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             {/* Organization Info */}
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">CollegeTips.in</h3>
-                <p className="text-sm mb-4">a venture of CollegeTips Ed. Tech. Media Pvt. Ltd.</p>
+                <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">
+                  CollegeTips.in
+                </h3>
+                <p className="text-sm mb-4">
+                  a venture of CollegeTips Ed. Tech. Media Pvt. Ltd.
+                </p>
               </div>
-              
+
               {/* Social Media Icons */}
               <div>
-                <h4 className="text-sm uppercase tracking-widest mb-3">Connect With Us</h4>
+                <h4 className="text-sm uppercase tracking-widest mb-3">
+                  Connect With Us
+                </h4>
                 <div className="flex space-x-4">
-                  <a 
-                    href="https://www.facebook.com/collegetips.in/" 
-                    target="_blank" 
+                  <a
+                    href="https://www.facebook.com/collegetips.in/"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-bittersweet transition-colors"
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path>
+                    <svg
+                      className="w-5 h-5"
+                      viewBox="0 0 320 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
+                      ></path>
                     </svg>
                   </a>
-                  <a 
-                    href="https://twitter.com/CollegeTips_in" 
-                    target="_blank" 
+                  <a
+                    href="https://twitter.com/CollegeTips_in"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-bittersweet transition-colors"
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                    <svg
+                      className="w-5 h-5"
+                      viewBox="0 0 512 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                      ></path>
                     </svg>
                   </a>
-                  <a 
-                    href="https://www.instagram.com/collegetips.in/" 
-                    target="_blank" 
+                  <a
+                    href="https://www.instagram.com/collegetips.in/"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-bittersweet transition-colors"
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path>
+                    <svg
+                      className="w-5 h-5"
+                      viewBox="0 0 448 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                      ></path>
                     </svg>
                   </a>
-                  <a 
-                    href="https://www.youtube.com/channel/UCcbf5sZkxsBGYj9Dr7K9QEA" 
-                    target="_blank" 
+                  <a
+                    href="https://www.youtube.com/channel/UCcbf5sZkxsBGYj9Dr7K9QEA"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-bittersweet transition-colors"
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"></path>
+                    <svg
+                      className="w-5 h-5"
+                      viewBox="0 0 576 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+                      ></path>
                     </svg>
                   </a>
                 </div>
               </div>
             </div>
-            
+
             {/* Contact Form */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">Get In Touch</h3>
+              <h3 className="text-xl font-bold mb-4 border-b border-bittersweet pb-2">
+                Get In Touch
+              </h3>
               <form className="space-y-4">
-                <input 
-                  type="text" 
-                  placeholder="Your Name" 
+                <input
+                  type="text"
+                  placeholder="Your Name"
                   className="w-full bg-white/10 border-0 rounded p-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-bittersweet"
                 />
-                <input 
-                  type="email" 
-                  placeholder="Your Email" 
+                <input
+                  type="email"
+                  placeholder="Your Email"
                   className="w-full bg-white/10 border-0 rounded p-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-bittersweet"
                 />
-                <textarea 
-                  placeholder="Your Message" 
+                <textarea
+                  placeholder="Your Message"
                   rows={3}
                   className="w-full bg-white/10 border-0 rounded p-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-bittersweet"
                 ></textarea>
-                <button 
+                <button
                   type="submit"
                   className="w-full px-4 py-2 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-white hover:text-hunter-green transition-colors rounded"
                 >
@@ -983,82 +1151,88 @@ export default function Home() {
               </form>
             </div>
           </div>
-          
+
           {/* Copyright */}
           <div className="mt-12 pt-6 border-t border-white/20 text-center">
             <p className="text-sm">
-              © 2025 Pet-Friendly City Initiative by CollegeTips.in. All rights reserved.
+              © 2025 Pet-Friendly City Initiative by CollegeTips.in. All rights
+              reserved.
             </p>
           </div>
         </div>
       </footer>
 
       {/* Chat Box */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-full max-w-[calc(100vw-32px)] md:max-w-[400px]">
         {!isChatOpen ? (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="w-16 h-16 rounded-full bg-bittersweet text-white flex items-center justify-center shadow-lg hover:bg-hunter-green transition-colors"
-            aria-label="Open chat"
+            className="ml-auto w-12 h-12 md:w-16 md:h-16 rounded-full bg-bittersweet text-white flex items-center justify-center shadow-lg hover:bg-hunter-green transition-colors"
           >
-            <MessageCircle className="h-8 w-8" />
+            <MessageCircle className="w-6 h-6" />
           </button>
         ) : (
-          <div className="fixed bottom-4 right-4 w-80 h-[28rem] bg-white rounded-lg shadow-xl border border-hunter-green flex flex-col z-50 overflow-hidden">
-            {/* Chat Header */}
-            <div className="bg-hunter-green text-white p-4 flex justify-between items-center">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-yellow-green flex items-center justify-center mr-2">
-                  <span className="text-hunter-green font-bold">🐾</span>
-                </div>
-                <h3 className="font-bold">PawBuddy</h3>
-              </div>
-              <button 
-                onClick={() => setIsChatOpen(false)}
-                className="text-white hover:text-bittersweet"
-                aria-label="Close chat"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            
-            {/* Chat Messages */}
-            <div className="flex-1 p-4 overflow-y-auto">
-              {chatMessages.map((msg, index) => (
-                <div 
-                  key={index} 
-                  className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-lg shadow-xl w-full"
+            >
+              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 className="font-semibold text-hunter-green">
+                  Chat with PawBuddy
+                </h3>
+                <button
+                  onClick={() => setIsChatOpen(false)}
+                  className="text-gray-500 hover:text-hunter-green transition-colors"
                 >
-                  <div 
-                    className={`max-w-[80%] p-3 rounded-lg ${msg.sender === 'user' 
-                      ? 'bg-bittersweet text-white rounded-br-none' 
-                      : 'bg-gray-100 text-hunter-green rounded-bl-none'}`}
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              {/* Rest of the chat interface */}
+              <div className="flex-1 p-4 overflow-y-auto">
+                {chatMessages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`mb-4 flex ${
+                      msg.sender === "user" ? "justify-end" : "justify-start"
+                    }`}
                   >
-                    {msg.message}
+                    <div
+                      className={`max-w-[80%] p-3 rounded-lg ${
+                        msg.sender === "user"
+                          ? "bg-bittersweet text-white rounded-br-none"
+                          : "bg-gray-100 text-hunter-green rounded-bl-none"
+                      }`}
+                    >
+                      {msg.message}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Chat Input */}
-            <div className="border-t border-gray-200 p-4 flex">
-              <input
-                type="text"
-                value={userMessage}
-                onChange={(e) => setUserMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className="flex-1 border border-hunter-green rounded-l-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-bittersweet"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="bg-bittersweet text-white px-4 rounded-r-lg hover:bg-hunter-green transition-colors"
-                aria-label="Send message"
-              >
-                <Send className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
+                ))}
+              </div>
+
+              {/* Chat Input */}
+              <div className="border-t border-gray-200 p-4 flex">
+                <input
+                  type="text"
+                  value={userMessage}
+                  onChange={(e) => setUserMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="flex-1 border border-hunter-green rounded-l-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-bittersweet"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="bg-bittersweet text-white px-4 rounded-r-lg hover:bg-hunter-green transition-colors"
+                  aria-label="Send message"
+                >
+                  <Send className="h-5 w-5" />
+                </button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         )}
       </div>
     </main>

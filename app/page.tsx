@@ -38,6 +38,7 @@ export default function Home() {
   
   // State for chat box
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
     { sender: 'bot', message: 'Hello! I\'m PawBuddy, your friendly guide to the Pet-Friendly City campaign. How can I help you today?' },
   ]);
@@ -128,7 +129,16 @@ export default function Home() {
           >
             PET-FRIENDLY CITY
           </Link>
-          <div className="flex space-x-8">
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-hunter-green"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div className={`hidden md:flex space-x-4 md:space-x-8 ${isMenuOpen ? 'absolute top-full left-0 w-full bg-white py-4 px-8 shadow-lg' : ''}`}>
             <Link
               href="#about"
               className="text-sm uppercase tracking-widest hover:text-bittersweet transition-colors"
@@ -166,13 +176,13 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 md:px-8 container mx-auto">
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-4 px-4 md:px-0">
           <div className="col-span-12 md:col-span-7 mb-8 md:mb-0">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-7xl md:text-9xl font-bold tracking-tighter leading-none mb-6 text-hunter-green"
+              className="text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter leading-none mb-6 text-hunter-green"
             >
               PET-
               <br />
@@ -202,11 +212,11 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-8 flex flex-wrap gap-4"
+              className="mt-8 flex flex-wrap gap-2 md:gap-4 px-4 md:px-0"
             >
               <Link
                 href="#contact"
-                className="inline-flex items-center px-8 py-3 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-hunter-green transition-colors"
+                className="inline-flex items-center px-4 py-2 md:px-8 md:py-3 bg-bittersweet text-white text-sm uppercase tracking-widest hover:bg-hunter-green transition-colors"
               >
                 Join The Movement <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -326,7 +336,7 @@ export default function Home() {
             OBJECTIVES
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 px-4 md:px-0">
             {/* Objective 1 */}
             <div className="group">
               <div className="aspect-square bg-yellow-green mb-6 flex items-center justify-center group-hover:bg-bittersweet transition-colors duration-300">
